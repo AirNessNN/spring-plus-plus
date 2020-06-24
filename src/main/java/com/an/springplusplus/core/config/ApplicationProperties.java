@@ -27,6 +27,8 @@ public class ApplicationProperties{
     private String baseControllerScanClassPath;
     private String acceptContentType;
     private String acceptCharset;
+    private Properties properties;
+
 
 
     /**
@@ -53,6 +55,7 @@ public class ApplicationProperties{
         baseControllerScanClassPath=propertiesLoader.getBaseControllerScanClassPath();
         acceptCharset=propertiesLoader.getAcceptCharset();
         acceptContentType=propertiesLoader.getAcceptContentType();
+        properties=propertiesLoader.properties;
     }
 
     /**
@@ -88,6 +91,9 @@ public class ApplicationProperties{
             //加载其他
             acceptContentType=properties.getProperty(ACCEPT_CONTENT_TYPE,"application/json");
             acceptCharset=properties.getProperty(ACCEPT_CHARSET,"utf-8");
+
+
+            //加载其他配置
         }
 
         private void initPackagePath(Properties properties){
@@ -100,5 +106,6 @@ public class ApplicationProperties{
             log.info("基础包扫描路径：{}",value);
         }
     }
+
 }
 
