@@ -70,4 +70,9 @@ public class ServletApplication {
         log.info("Spring-plus-plus初始化完成。   耗时：{}ms",(System.currentTimeMillis()-time));
         return application;
     }
+
+    public synchronized void destroy(){
+        log.info("销毁ServletApplication");
+        application.servletContextAutoConfiguration.destroy();
+    }
 }

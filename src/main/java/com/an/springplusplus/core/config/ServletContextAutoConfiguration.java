@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ import java.util.Set;
 public class ServletContextAutoConfiguration {
 
 
+    private final Set<Configuration> configurations;
 
 
     public ServletContextAutoConfiguration(ApplicationProperties properties,ServletContext  context){
@@ -55,6 +57,7 @@ public class ServletContextAutoConfiguration {
             }
         };
 
+        configurations=new HashSet<>();
         //实例化加载
         for (Class<?> tc:scanClass){
             try {
@@ -66,6 +69,7 @@ public class ServletContextAutoConfiguration {
                     Configuration configuration= (Configuration) o;
                     configuration.init(properties,context);
                     log.info("初始化 {} Configuration",tc.getName());
+                    configurations.add(configuration);
                 }else if (interfaces.contains(ClassScanConfiguration.class)){
                     Constructor<?> constructor=tc.getConstructor();
                     Object o=constructor.newInstance();
@@ -82,7 +86,10 @@ public class ServletContextAutoConfiguration {
         }
     }
 
-
+    public synchronized void destroy(){
+        log.info("销毁Configuration");
+        configurations.forEach(Configuration::destroy);
+    }
 
 
 }

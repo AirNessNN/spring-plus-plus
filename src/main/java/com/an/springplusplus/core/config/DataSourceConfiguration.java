@@ -35,6 +35,7 @@ public class DataSourceConfiguration implements Configuration{
     /**
      * 销毁数据连接
      */
+    @Override
     public void destroy(){
         dataSource.destroy();
     }

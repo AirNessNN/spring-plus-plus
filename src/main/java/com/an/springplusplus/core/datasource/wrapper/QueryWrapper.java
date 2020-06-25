@@ -170,11 +170,11 @@ public class QueryWrapper<E> extends SqlWrapper<E> implements SelectWrapper<E> {
 
     @Override
     public E getById(Serializable id) {
-        return eq(getTableId(),id).oneOrNull();
+        return eq(com.an.springplusplus.core.tool.StringUtils.humpToUnderline(getTableId()),id).oneOrNull();
     }
 
     public List<E> getBatchById(List<Serializable> ids){
-        return in(getTableId(),ids).list();
+        return in(com.an.springplusplus.core.tool.StringUtils.humpToUnderline(getTableId()),ids).list();
     }
 
     @Override

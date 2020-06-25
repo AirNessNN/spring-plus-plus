@@ -11,4 +11,6 @@ import javax.servlet.ServletContext;
 public interface Configuration {
 
     void init(ApplicationProperties properties, ServletContext context);
+
+    default void destroy(){}
 }

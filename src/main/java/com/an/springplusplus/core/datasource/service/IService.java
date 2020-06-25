@@ -1,6 +1,10 @@
 package com.an.springplusplus.core.datasource.service;
 
+import com.an.springplusplus.core.datasource.page.Page;
 import com.an.springplusplus.core.datasource.wrapper.SelectWrapper;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Airness
@@ -10,6 +14,19 @@ import com.an.springplusplus.core.datasource.wrapper.SelectWrapper;
  */
 public interface IService<E> {
 
+    E getById(Serializable id);
 
-    SelectWrapper query();
+    Page<E> getPage(Page<E> page, SelectWrapper<E> wrapper);
+
+    List<E> getBatchById(List<Serializable> ids);
+
+    int updateById(E entity);
+
+    boolean deleteById(Serializable id);
+
+    int deleteBatchById(List<Serializable> id);
+
+    E insert(E entity);
+
+    List<E> insertBatch(List<E> entities);
 }

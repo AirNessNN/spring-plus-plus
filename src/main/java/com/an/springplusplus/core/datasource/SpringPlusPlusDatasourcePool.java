@@ -5,9 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -45,12 +42,12 @@ public class SpringPlusPlusDatasourcePool implements DataSource {
     private void initConnection() {
         try {
             Class.forName(properties.driverName);
-            for (int i = 0; i < properties.maxConnectionSize; i++) {
-                Connection connection= DriverManager.getConnection(properties.connectionUrl,properties.username,properties.password);
-                connections.addElement(connection);
-                log.debug("完成连接初始化 【connection {}】",i);
-            }
-        } catch (ClassNotFoundException | SQLException e) {
+//            for (int i = 0; i < properties.maxConnectionSize; i++) {
+//                Connection connection= DriverManager.getConnection(properties.connectionUrl,properties.username,properties.password);
+//                connections.addElement(connection);
+//                log.debug("完成连接初始化 【connection {}】",i);
+//            }
+        } catch (ClassNotFoundException e) {
             log.error("无法载入数据库或连接",e);
             throw new RuntimeException(e.getMessage(),e);
         }
@@ -60,7 +57,7 @@ public class SpringPlusPlusDatasourcePool implements DataSource {
     public SpringPlusPlusDatasourcePool(DataSourceProperties properties) {
         connections = new Vector<>(properties.maxConnectionSize);
         this.properties = properties;
-        //initConnection();
+        initConnection();
     }
 
 
@@ -70,23 +67,20 @@ public class SpringPlusPlusDatasourcePool implements DataSource {
 //            Connection connection=connections.firstElement();
 //            connections.removeElementAt(0);
 //            log.debug("申请了连接池 池子内还剩{}个连接",connections.size());
-//            return (Connection) Proxy.newProxyInstance(SpringPlusPlusDatasourcePool.class.getClassLoader(), connection.getClass().getInterfaces(), new InvocationHandler() {
-//                @Override
-//                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-//                    log.debug(method.getName());
-//                    if (!method.getName().equals("close")){
-//                        return method.invoke(args);
+//            return (Connection) Proxy.newProxyInstance(SpringPlusPlusDatasourcePool.class.getClassLoader(), connection.getClass().getInterfaces(), (proxy, method, args) -> {
+//                log.debug(method.getName());
+//                if (!method.getName().equals("close")){
+//                    return method.invoke(args);
+//                }else {
+//                    if (!destroyFlag){
+//                        connections.addElement(connection);
+//                        log.debug("连接已被回收");
 //                    }else {
-//                        if (!destroyFlag){
-//                            connections.addElement(connection);
-//                            log.debug("连接已被回收");
-//                        }else {
-//                            log.debug("销毁连接池");
-//                            return method.invoke(args);
+//                        log.debug("销毁连接池");
+//                        return method.invoke(args);
 //
-//                        }
-//                        return null;
 //                    }
+//                    return null;
 //                }
 //            });
 //        }else {

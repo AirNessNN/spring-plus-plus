@@ -1,15 +1,15 @@
-package com.an.springplusplus.core.datasource.mapper;
+package com.an.springplusplus.core.datasource.service;
 
 import java.lang.annotation.*;
 
 /**
  * @author Airness
  * @email huhaowei16@hotmail.com
- * @date 2020/6/24 11:37 下午
+ * @date 2020/6/25 1:35 下午
  * @description
  */
 @Documented
-@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Mapper {
+@Target({ElementType.TYPE})
+public @interface Service {
 }

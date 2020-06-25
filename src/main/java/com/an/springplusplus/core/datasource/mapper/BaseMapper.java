@@ -1,7 +1,9 @@
 package com.an.springplusplus.core.datasource.mapper;
 
+import com.an.springplusplus.core.datasource.page.Page;
 import com.an.springplusplus.core.datasource.wrapper.EntityWrapper;
 import com.an.springplusplus.core.datasource.wrapper.QueryWrapper;
+import com.an.springplusplus.core.datasource.wrapper.SelectWrapper;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -14,40 +16,45 @@ import java.util.List;
  * @date 2020/6/23 10:33 下午
  * @description
  */
-public class BaseMapper<E> implements Mapper<E>{
+public abstract class BaseMapper<E>{
 
 
-    @Override
     public E getById(Serializable id) {
         return new QueryWrapper<>(getGenericSuperclass()).getById(id);
     }
 
-    @Override
+    public Page<E> getPage(Page<E> page, SelectWrapper<E> wrapper){
+        //直接获取条件
+        List<E> records=wrapper.list();
+        int totals=records.size()/page.getSize();
+        totals=records.size()%page.getSize()>0?totals+1:totals;
+        page.setTotals(totals);
+        int endIndex=((page.getIndex()-1)*page.getSize())+page.getSize();
+        endIndex= Math.min(endIndex, records.size());
+        page.setRecords(records.subList((page.getIndex()-1)*page.getSize(),endIndex));
+        return page;
+    }
+
     public List<E> getBatchById(List<Serializable> ids) {
         return new QueryWrapper<>(getGenericSuperclass()).getBatchById(ids);
     }
 
-    @Override
     public int updateById(E entity) {
         return new EntityWrapper<>(getGenericSuperclass()).updateById(entity);
     }
 
-    @Override
     public boolean deleteById(Serializable id) {
         return new EntityWrapper<>(getGenericSuperclass()).deleteById(id);
     }
 
-    @Override
     public int deleteBatchById(List<Serializable> id) {
         return new EntityWrapper<>(getGenericSuperclass()).deleteBatchById(id);
     }
 
-    @Override
     public E insert(E entity) {
         return new EntityWrapper<>(getGenericSuperclass()).insert(entity);
     }
 
-    @Override
     public List<E> insertBatch(List<E> entities) {
         return new EntityWrapper<>(getGenericSuperclass()).insertBatch(entities);
     }
